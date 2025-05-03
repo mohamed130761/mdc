@@ -31,13 +31,13 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Use environment variables
 SECRET_KEY = env('SECRET_KEY')
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
-    'mdc-six.vercel.app',
+    'mdc-eight.vercel.app',
     'mdc-directory.netlify.app',
     'localhost',
-    '127.0.0.1',]
+    '127.0.0.1']
 
 
 # Application definition
@@ -69,7 +69,7 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     'https://mdc-directory.netlify.app',
-    'https://mdc-six.vercel.app',
+    'https://mdc-eight.vercel.app',
 ]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
