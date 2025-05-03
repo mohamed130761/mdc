@@ -34,7 +34,7 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = [
-    'mdc-chi.vercel.app',
+    'mdc-six.vercel.app',
     'mdc-directory.netlify.app',
     'localhost',
     '127.0.0.1',]
@@ -69,7 +69,7 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     'https://mdc-directory.netlify.app',
-    'https://mdc-chi.vercel.app',
+    'https://mdc-six.vercel.app',
 ]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
