@@ -35,7 +35,7 @@ DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = [
     '.vercel.app',
-    '.netlify',
+    'mdc-directory.netlify.app',
     'localhost',
     '127.0.0.1',]
 
@@ -68,7 +68,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    'https://your-netlify-domain.netlify.app',
+    'https://mdc-directory.netlify.app',
     'vercel'
 ]
 
