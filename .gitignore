@@ -1,69 +1,16 @@
+# Ignore database file
 
-# Environment variables
-.env
-
-# Python bytecode
-*.py[cod]
-__pycache__/
+# Ignore Python bytecode files
 *.pyc
 *.pyo
 
-# Virtual environments
+# Ignore virtual environment directories
+venv
 env/
-venv/
 
-# Django SQLite database (if used for development)
-db.sqlite3
-
-# Django migrations
-*.log
-*.pot
-
-# Build artifacts
-build/
-dist/
-*.egg-info/
-*.eggs
-
-# Coverage reports
-.coverage
-*.cover
-htmlcov/
-
-# IDE and editor-specific files
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Operating system files
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# Deployment platform files
-.vercel/
-.netlify/
-
-# pipenv/poetry files (if using these package managers)
-Pipfile
-Pipfile.lock
-
-# Testing-related files
-.tox/
-.nox/
-.pytest_cache/
-.coverage
-.cache/
-
-# Static and media files (optional if you generate them locally)
-staticfiles/
-media/
-
-# Node.js files (if applicable in your frontend/backend setup)
-node_modules/
-npm-debug.log
-yarn-debug.log
-yarn-error.log
+# Ignore Django migration files (if you want them untracked)
+migrations/
 
 
+# Ignore .env files or secret keys (optional)
+.env
