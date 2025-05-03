@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import Networkar
+from django.db.models import Q
 
 # Create your views here.
 def networkar(request):
