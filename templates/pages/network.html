@@ -151,6 +151,27 @@
                 }
             });
         });
+
+        $('select[name="area"]').change(function () {
+    let selectedArea = $(this).val();
+
+    $.ajax({
+        url: "{% url 'get_types' %}",
+        data: {
+            'area': selectedArea
+        },
+        success: function (data) {
+            let typeSelect = $('select[name="type"]');
+            typeSelect.empty();
+            typeSelect.append('<option value="">All Types</option>');
+            data.types.forEach(function (type) {
+                typeSelect.append(`<option value="${type}">${type}</option>`);
+            });
+            // Refresh Select2
+            typeSelect.trigger('change.select2');
+        }
+    });
+});
     });
 </script>
 
