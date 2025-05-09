@@ -77,3 +77,8 @@ def get_areas(request):
     governorate = request.GET.get('governorate')
     areas = Network.objects.filter(governorate=governorate).values_list('area', flat=True).distinct()
     return JsonResponse({'areas': list(areas)})
+
+def get_types(request):
+    area = request.GET.get('area')
+    types = Network.objects.filter(area=area).values_list('type', flat=True).distinct()
+    return JsonResponse({'types': list(types)})

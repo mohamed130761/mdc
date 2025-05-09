@@ -7,5 +7,6 @@ urlpatterns=[
     path('contact/',views.contact,name='contact'),
     path('medical_network/',views.network,name='network'),
     path('get-areas/', views.get_areas, name='get_areas'),
+    path('get-types/', views.get_types, name='get_types'),
 
 ]
