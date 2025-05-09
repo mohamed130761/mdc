@@ -135,7 +135,7 @@
             let selectedGovernorate = $(this).val();
 
             $.ajax({
-                url: "{% url 'get_areas' %}",
+                url: "{% url 'get_areasen' %}",
                 data: {
                     'governorate': selectedGovernorate
                 },
@@ -156,7 +156,7 @@
     let selectedArea = $(this).val();
 
     $.ajax({
-        url: "{% url 'get_types' %}",
+        url: "{% url 'get_typesen' %}",
         data: {
             'area': selectedArea
         },
