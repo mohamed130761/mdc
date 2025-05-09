@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from .models import Network
 from django.db.models import Q
+from django.http import JsonResponse
+
 # Create your views here.
 
 
@@ -69,3 +71,9 @@ def nav(request):
 
 def footer(request):
     return render(request,'parts/footer.html')
+
+
+def get_areas(request):
+    governorate = request.GET.get('governorate')
+    areas = Network.objects.filter(governorate=governorate).values_list('area', flat=True).distinct()
+    return JsonResponse({'areas': list(areas)})
