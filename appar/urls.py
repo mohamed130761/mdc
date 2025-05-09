@@ -6,4 +6,6 @@ urlpatterns=[
     path('aboutar',views.aboutar,name='aboutar'),
     path('contactar',views.contactar,name='contactar'),
     path('medical_networkar/',views.networkar, name='networkar'),
+    path('get-areas/', views.get_areas, name='get_areas'),
+    path('get-types/', views.get_types, name='get_types'),
 ]

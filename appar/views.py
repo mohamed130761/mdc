@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from .models import Networkar
 from django.db.models import Q
+from django.http import JsonResponse
+
 
 # Create your views here.
 def networkar(request):
@@ -61,3 +63,14 @@ def navbarar(request):
 
 def footerar(request):
     return render(request,'pages/footerar.html')
+
+
+def get_areas(request):
+    governorate = request.GET.get('governorate')
+    areas = Networkar.objects.filter(governorate=governorate).values_list('area', flat=True).distinct()
+    return JsonResponse({'areas': list(areas)})
+
+def get_types(request):
+    area = request.GET.get('area')
+    types = Networkar.objects.filter(area=area).values_list('type', flat=True).distinct()
+    return JsonResponse({'types': list(types)})

@@ -116,6 +116,64 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Make dropdowns searchable
+        $('select').select2();
+
+        // When governorate changes, fetch and update areas
+        $('select[name="governorate"]').change(function () {
+            let selectedGovernorate = $(this).val();
+
+            $.ajax({
+                url: "{% url 'get_areas' %}",
+                data: {
+                    'governorate': selectedGovernorate
+                },
+                success: function (data) {
+                    let areaSelect = $('select[name="area"]');
+                    areaSelect.empty();
+                    areaSelect.append('<option value="">All Areas</option>');
+                    data.areas.forEach(function (area) {
+                        areaSelect.append(`<option value="${area}">${area}</option>`);
+                    });
+                    // Refresh Select2 to update options
+                    areaSelect.trigger('change.select2');
+                }
+            });
+        });
+
+        $('select[name="area"]').change(function () {
+    let selectedArea = $(this).val();
+
+    $.ajax({
+        url: "{% url 'get_types' %}",
+        data: {
+            'area': selectedArea
+        },
+        success: function (data) {
+            let typeSelect = $('select[name="type"]');
+            typeSelect.empty();
+            typeSelect.append('<option value="">All Types</option>');
+            data.types.forEach(function (type) {
+                typeSelect.append(`<option value="${type}">${type}</option>`);
+            });
+            // Refresh Select2
+            typeSelect.trigger('change.select2');
+        }
+    });
+});
+    });
+</script>
 </body>
 </html>
 {%endblock content%}
