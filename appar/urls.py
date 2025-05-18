@@ -8,4 +8,9 @@ urlpatterns=[
     path('medical_networkar/',views.networkar, name='networkar'),
     path('get-areas/', views.get_areas, name='get_areas'),
     path('get-types/', views.get_types, name='get_types'),
+    path('edsar/',views.edsar,name='edsar'),
+    path('mofaar/',views.mofaar,name='mofaar'),
+    path('exxonar/',views.exxonar,name='exxonar'),
+    path('emfaar/',views.emfaar,name='emfa'),
+    path('horizonar/',views.horizonar,name='horizonar'),
 ]

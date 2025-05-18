@@ -74,3 +74,19 @@ def get_types(request):
     area = request.GET.get('area')
     types = Networkar.objects.filter(area=area).values_list('type', flat=True).distinct()
     return JsonResponse({'types': list(types)})
+
+
+def edsar(request):
+    return render(request,'pages/edsar.html')
+
+def mofaar(request):
+    return render(request,'pages/mofaar.html')
+
+def exxonar(request):
+    return render(request,'pages/exxonar.html')
+
+def emfaar(request):
+    return render(request,'pages/emfaar.html')
+
+def horizonar(request):
+    return render(request,'pages/horizonar.html')

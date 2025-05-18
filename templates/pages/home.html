@@ -8,28 +8,94 @@
         <h1 class="mb-4">Welcome to the Medical Services Guide</h1>
     </div>
 
-    <!-- Section: How We Can Help You -->
+    <!-- Section: Healthcare Providers -->
     <section class="container py-5 text-center">
-        <h2 class="mb-4">How We Can Help You</h2>
+        <h2 class="mb-4">Healthcare Providers</h2>
 
-        <div class="d-flex justify-content-center">
-            <a href="{% url 'network' %}" class="text-decoration-none">
-                <div class="card shadow-sm" style="width: 18rem;">
-                    <img src="{% static 'provider.jpg' %}" class="card-img-top" alt="Healthcare Providers">
-                    <div class="card-body">
-                        <h5 class="card-title">Healthcare Providers</h5>
-                        <p class="card-text">Explore our network of hospitals, labs, and clinics.</p>
-                        <button class="btn btn-primary w-100">View</button>
+        <div class="row justify-content-center">
+            <!-- Card 1 -->
+            <div class="col-md-4 mb-4">
+                <a href="{% url 'network' %}" class="text-decoration-none text-dark">
+                    <div class="card shadow-sm h-100">
+                        <img src="{% static 'provider.jpg' %}" class="card-img-top" alt="Medmark Discount Card">
+                        <div class="card-body">
+                            <h5 class="card-title">Medmark Discount Card</h5>
+                            <button class="btn btn-primary w-100">View</button>
+                        </div>
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="col-md-4 mb-4">
+                <a href="{% url 'eds' %}" class="text-decoration-none text-dark">
+                    <div class="card shadow-sm h-100">
+                        <img src="{% static 'provider.jpg' %}" class="card-img-top" alt="Egyptian Diplomatic Society">
+                        <div class="card-body">
+                            <h5 class="card-title">Egyptian Diplomatic Society</h5>
+                            <button class="btn btn-primary w-100">View</button>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="col-md-4 mb-4">
+                <a href="{% url 'mofa' %}" class="text-decoration-none text-dark">
+                    <div class="card shadow-sm h-100">
+                        <img src="{% static 'provider.jpg' %}" class="card-img-top" alt="Ministry of Foreign Affairs - Horizon">
+                        <div class="card-body">
+                            <h5 class="card-title">Ministry of Foreign Affairs - Horizon</h5>
+                            <button class="btn btn-primary w-100">View</button>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="col-md-4 mb-4">
+                <a href="{% url 'exxon' %}" class="text-decoration-none text-dark">
+                    <div class="card shadow-sm h-100">
+                        <img src="{% static 'provider.jpg' %}" class="card-img-top" alt="EXXON MOBIL Co">
+                        <div class="card-body">
+                            <h5 class="card-title">Exxon Mobil Egypt</h5>
+                            <button class="btn btn-primary w-100">View</button>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="col-md-4 mb-4">
+                <a href="{% url 'emfa' %}" class="text-decoration-none text-dark">
+                    <div class="card shadow-sm h-100">
+                        <img src="{% static 'provider.jpg' %}" class="card-img-top" alt="Ministry of Foreign Affairs - Allianz">
+                        <div class="card-body">
+                            <h5 class="card-title">Ministry of Foreign Affairs - Allianz</h5>
+                            <button class="btn btn-primary w-100">View</button>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Card 6 -->
+            <div class="col-md-4 mb-4">
+                <a href="{% url 'horizon' %}" class="text-decoration-none text-dark">
+                    <div class="card shadow-sm h-100">
+                        <img src="{% static 'provider.jpg' %}" class="card-img-top" alt="Horizon Groups">
+                        <div class="card-body">
+                            <h5 class="card-title">Horizon Groups</h5>
+                            <button class="btn btn-primary w-100">View</button>
+                        </div>
+                    </div>
+                </a>
+            </div>
         </div>
     </section>
 
     <!-- Section: Know More -->
     <section class="container py-5 text-center bg-white">
         <h2 class="mb-4">Know More About How to Use the Services</h2>
-        <!-- You can add more content later -->
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

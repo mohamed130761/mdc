@@ -82,3 +82,20 @@ def get_typesen(request):
     area = request.GET.get('area')
     types = Network.objects.filter(area=area).values_list('type', flat=True).distinct()
     return JsonResponse({'types': list(types)})
+
+
+
+def eds(request):
+    return render(request,'pages/eds.html')
+
+def mofa(request):
+    return render(request,'pages/mofa.html')
+
+def exxon(request):
+    return render(request,'pages/exxon.html')
+
+def emfa(request):
+    return render(request,'pages/emfa.html')
+
+def horizon(request):
+    return render(request,'pages/horizon.html')
