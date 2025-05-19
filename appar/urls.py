@@ -11,6 +11,6 @@ urlpatterns=[
     path('edsar/',views.edsar,name='edsar'),
     path('mofaar/',views.mofaar,name='mofaar'),
     path('exxonar/',views.exxonar,name='exxonar'),
-    path('emfaar/',views.emfaar,name='emfa'),
+    path('emfaar/',views.emfaar,name='emfaar'),
     path('horizonar/',views.horizonar,name='horizonar'),
 ]

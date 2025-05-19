@@ -17,10 +17,10 @@ class Network(models.Model):
         return f"{self.provider} - {self.type} - {self.area}"
 
 
-class Networkeds(models.Model):
+class Networkedsnew(models.Model):
     governorate = models.CharField(max_length=100, verbose_name='Governorate')
     area = models.CharField(max_length=100,null=True, verbose_name='Area')
-    type = models.CharField(max_length=100, verbose_name='Type')
+    type = models.CharField(max_length=500, verbose_name='Type')
     speciality = models.CharField(max_length=255, verbose_name='Speciality')
     provider = models.CharField(max_length=255, verbose_name='Provider')
     address = models.TextField(verbose_name='Address')

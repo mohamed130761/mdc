@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Network
+from .models import Network, Networkmofa, Networkexxon, Networkemfa, Networkhorizon,Networkedsnew
 from django.db.models import Q
 from django.http import JsonResponse
 
@@ -85,17 +85,258 @@ def get_typesen(request):
 
 
 
-def eds(request):
-    return render(request,'pages/eds.html')
 
+
+
+
+
+
+
+# ========== MOFA ==========
 def mofa(request):
-    return render(request,'pages/mofa.html')
+    networks = Networkmofa.objects.all()
+    governorate = request.GET.get('governorate')
+    area = request.GET.get('area')
+    type = request.GET.get('type')
+    speciality = request.GET.get('speciality')
+    query = request.GET.get('query')
 
+    if governorate:
+        networks = networks.filter(governorate=governorate)
+    if area:
+        networks = networks.filter(area=area)
+    if type:
+        networks = networks.filter(type=type)
+    if speciality:
+        networks = networks.filter(speciality=speciality)
+    if query:
+        networks = networks.filter(
+            Q(provider__icontains=query) |
+            Q(address__icontains=query) |
+            Q(phone__icontains=query) |
+            Q(email__icontains=query) |
+            Q(notes__icontains=query)
+        )
+
+    governorates = Networkmofa.objects.values_list('governorate', flat=True).distinct()
+    areas = Networkmofa.objects.values_list('area', flat=True).distinct()
+    types = Networkmofa.objects.values_list('type', flat=True).distinct()
+    specialities = Networkmofa.objects.values_list('speciality', flat=True).distinct()
+
+    return render(request, 'pages/mofa.html', {
+        'networks': networks,
+        'governorates': governorates,
+        'types': types,
+        'specialities': specialities,
+        'areas': areas,
+    })
+
+def get_areas_mofa(request):
+    governorate = request.GET.get('governorate')
+    areas = Networkmofa.objects.filter(governorate=governorate).values_list('area', flat=True).distinct()
+    return JsonResponse({'areas': list(areas)})
+
+def get_types_mofa(request):
+    area = request.GET.get('area')
+    types = Networkmofa.objects.filter(area=area).values_list('type', flat=True).distinct()
+    return JsonResponse({'types': list(types)})
+
+
+# ========== EXXON ==========
 def exxon(request):
-    return render(request,'pages/exxon.html')
+    networks = Networkexxon.objects.all()
+    governorate = request.GET.get('governorate')
+    area = request.GET.get('area')
+    type = request.GET.get('type')
+    speciality = request.GET.get('speciality')
+    query = request.GET.get('query')
 
+    if governorate:
+        networks = networks.filter(governorate=governorate)
+    if area:
+        networks = networks.filter(area=area)
+    if type:
+        networks = networks.filter(type=type)
+    if speciality:
+        networks = networks.filter(speciality=speciality)
+    if query:
+        networks = networks.filter(
+            Q(provider__icontains=query) |
+            Q(address__icontains=query) |
+            Q(phone__icontains=query) |
+            Q(email__icontains=query) |
+            Q(notes__icontains=query)
+        )
+
+    governorates = Networkexxon.objects.values_list('governorate', flat=True).distinct()
+    areas = Networkexxon.objects.values_list('area', flat=True).distinct()
+    types = Networkexxon.objects.values_list('type', flat=True).distinct()
+    specialities = Networkexxon.objects.values_list('speciality', flat=True).distinct()
+
+    return render(request, 'pages/exxon.html', {
+        'networks': networks,
+        'governorates': governorates,
+        'types': types,
+        'specialities': specialities,
+        'areas': areas,
+    })
+
+def get_areas_exxon(request):
+    governorate = request.GET.get('governorate')
+    areas = Networkexxon.objects.filter(governorate=governorate).values_list('area', flat=True).distinct()
+    return JsonResponse({'areas': list(areas)})
+
+def get_types_exxon(request):
+    area = request.GET.get('area')
+    types = Networkexxon.objects.filter(area=area).values_list('type', flat=True).distinct()
+    return JsonResponse({'types': list(types)})
+
+
+# ========== EMFA ==========
 def emfa(request):
-    return render(request,'pages/emfa.html')
+    networks = Networkemfa.objects.all()
+    governorate = request.GET.get('governorate')
+    area = request.GET.get('area')
+    type = request.GET.get('type')
+    speciality = request.GET.get('speciality')
+    query = request.GET.get('query')
 
+    if governorate:
+        networks = networks.filter(governorate=governorate)
+    if area:
+        networks = networks.filter(area=area)
+    if type:
+        networks = networks.filter(type=type)
+    if speciality:
+        networks = networks.filter(speciality=speciality)
+    if query:
+        networks = networks.filter(
+            Q(provider__icontains=query) |
+            Q(address__icontains=query) |
+            Q(phone__icontains=query) |
+            Q(email__icontains=query) |
+            Q(notes__icontains=query)
+        )
+
+    governorates = Networkemfa.objects.values_list('governorate', flat=True).distinct()
+    areas = Networkemfa.objects.values_list('area', flat=True).distinct()
+    types = Networkemfa.objects.values_list('type', flat=True).distinct()
+    specialities = Networkemfa.objects.values_list('speciality', flat=True).distinct()
+
+    return render(request, 'pages/emfa.html', {
+        'networks': networks,
+        'governorates': governorates,
+        'types': types,
+        'specialities': specialities,
+        'areas': areas,
+    })
+
+def get_areas_emfa(request):
+    governorate = request.GET.get('governorate')
+    areas = Networkemfa.objects.filter(governorate=governorate).values_list('area', flat=True).distinct()
+    return JsonResponse({'areas': list(areas)})
+
+def get_types_emfa(request):
+    area = request.GET.get('area')
+    types = Networkemfa.objects.filter(area=area).values_list('type', flat=True).distinct()
+    return JsonResponse({'types': list(types)})
+
+
+# ========== HORIZON ==========
 def horizon(request):
-    return render(request,'pages/horizon.html')
+    networks = Networkhorizon.objects.all()
+    governorate = request.GET.get('governorate')
+    area = request.GET.get('area')
+    type = request.GET.get('type')
+    speciality = request.GET.get('speciality')
+    query = request.GET.get('query')
+
+    if governorate:
+        networks = networks.filter(governorate=governorate)
+    if area:
+        networks = networks.filter(area=area)
+    if type:
+        networks = networks.filter(type=type)
+    if speciality:
+        networks = networks.filter(speciality=speciality)
+    if query:
+        networks = networks.filter(
+            Q(provider__icontains=query) |
+            Q(address__icontains=query) |
+            Q(phone__icontains=query) |
+            Q(email__icontains=query) |
+            Q(notes__icontains=query)
+        )
+
+    governorates = Networkhorizon.objects.values_list('governorate', flat=True).distinct()
+    areas = Networkhorizon.objects.values_list('area', flat=True).distinct()
+    types = Networkhorizon.objects.values_list('type', flat=True).distinct()
+    specialities = Networkhorizon.objects.values_list('speciality', flat=True).distinct()
+
+    return render(request, 'pages/horizon.html', {
+        'networks': networks,
+        'governorates': governorates,
+        'types': types,
+        'specialities': specialities,
+        'areas': areas,
+    })
+
+def get_areas_horizon(request):
+    governorate = request.GET.get('governorate')
+    areas = Networkhorizon.objects.filter(governorate=governorate).values_list('area', flat=True).distinct()
+    return JsonResponse({'areas': list(areas)})
+
+def get_types_horizon(request):
+    area = request.GET.get('area')
+    types = Networkhorizon.objects.filter(area=area).values_list('type', flat=True).distinct()
+    return JsonResponse({'types': list(types)})
+
+
+# ========== EDS ==========
+def eds(request):
+    networks = Networkedsnew.objects.all()
+    governorate = request.GET.get('governorate')
+    area = request.GET.get('area')
+    type = request.GET.get('type')
+    speciality = request.GET.get('speciality')
+    query = request.GET.get('query')
+
+    if governorate:
+        networks = networks.filter(governorate=governorate)
+    if area:
+        networks = networks.filter(area=area)
+    if type:
+        networks = networks.filter(type=type)
+    if speciality:
+        networks = networks.filter(speciality=speciality)
+    if query:
+        networks = networks.filter(
+            Q(provider__icontains=query) |
+            Q(address__icontains=query) |
+            Q(phone__icontains=query) |
+            Q(email__icontains=query) |
+            Q(notes__icontains=query)
+        )
+
+    governorates = Networkedsnew.objects.values_list('governorate', flat=True).distinct()
+    areas = Networkedsnew.objects.values_list('area', flat=True).distinct()
+    types = Networkedsnew.objects.values_list('type', flat=True).distinct()
+    specialities = Networkedsnew.objects.values_list('speciality', flat=True).distinct()
+
+    return render(request, 'pages/eds.html', {
+        'networks': networks,
+        'governorates': governorates,
+        'types': types,
+        'specialities': specialities,
+        'areas': areas,
+    })
+
+def get_areas_eds(request):
+    governorate = request.GET.get('governorate')
+    areas = Networkedsnew.objects.filter(governorate=governorate).values_list('area', flat=True).distinct()
+    return JsonResponse({'areas': list(areas)})
+
+def get_types_eds(request):
+    area = request.GET.get('area')
+    types = Networkedsnew.objects.filter(area=area).values_list('type', flat=True).distinct()
+    return JsonResponse({'types': list(types)})
