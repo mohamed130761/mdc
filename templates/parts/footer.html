@@ -1,37 +1,12 @@
-{% load static %}
-<footer class="bg-white border-top mt-5 py-4">
-  <div class="container">
-    <div class="row align-items-center">
-
-      <!-- Left Links -->
-      <div class="col-12 col-md-6 mb-3 mb-md-0 d-flex flex-column flex-md-row justify-content-center justify-content-md-end gap-3">
-        <a href="{% url 'about' %}" class="text-decoration-none text-dark fw-semibold hover-effect">About Us</a>
-        <a href="{% url 'contact' %}" class="text-decoration-none text-dark fw-semibold hover-effect">Contact Us</a>
+<!-- 🔻 Smart Footer -->
+<footer class="bg-secondary text-white text-center text-lg-start mt-5 shadow">
+  <div class="container p-4">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <p class="mb-0 fw-semibold">
+          &copy; 2025 All rights reserved for <span class="text-warning">Medmark TPA Company</span>
+        </p>
       </div>
-
-      <!-- Right Image -->
-      <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-start">
-        <img src="{% static 'footer.jpg' %}" alt="Logo" class="img-fluid" style="max-height: 150px; object-fit: contain;">
-      </div>
-
     </div>
   </div>
 </footer>
-
-<style>
-  /* Simple hover effect for links */
-  .hover-effect:hover {
-    color: #0d6efd; /* Bootstrap primary blue */
-    text-decoration: underline;
-    transition: color 0.3s ease;
-  }
-
-  /* Adjust container padding on small screens */
-  @media (max-width: 576px) {
-    footer .container {
-      padding-left: 1rem;
-      padding-right: 1rem;
-    }
-  }
-</style>
-

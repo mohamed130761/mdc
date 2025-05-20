@@ -1,19 +1,12 @@
-{% load static %}
-<footer class="bg-white text-center text-lg-start border-top mt-5" dir="rtl">
+<!-- 🔻 Smart Footer -->
+<footer class="bg-secondary text-white text-center text-lg-start mt-5 shadow">
   <div class="container p-4">
     <div class="row">
-
-      <!-- الروابط -->
-      <div class="col-12 col-md-6 mb-3 d-flex flex-column align-items-start text-start">
-        <a href="{% url 'aboutar' %}" class="text-decoration-none mb-2 text-dark">من نحن</a>
-        <a href="{% url 'contactar' %}" class="text-decoration-none text-dark">تواصل معنا</a>
+      <div class="col-lg-12 text-center">
+        <p class="mb-0 fw-semibold">
+          &copy; 2025 All rights reserved for <span class="text-warning">Medmark TPA Company</span>
+        </p>
       </div>
-
-      <!-- الصورة -->
-      <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-start">
-        <img src="{% static 'footer.jpg' %}" alt="Logo" class="img-fluid" style="max-height: 200px;">
-      </div>
-
     </div>
   </div>
 </footer>
