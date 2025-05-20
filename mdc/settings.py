@@ -35,7 +35,8 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    'mdc-eight.vercel.app',
+    'medmarkportal.com',
+    'www.medmarkportal.com',
     'mdc-directory.netlify.app',
     'localhost',
     '127.0.0.1']
