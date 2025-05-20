@@ -87,7 +87,7 @@
         $('#governorate-select').change(function(){
             var governorate = $(this).val();
             $.ajax({
-                url: "{% url 'get_areas_emfaar_ar' %}",
+                url: "{% url 'get_areas_emfaar' %}",
                 data: {governorate: governorate},
                 success: function(data){
                     var areaSelect = $('#area-select');
@@ -103,7 +103,7 @@
         $('#area-select').change(function(){
             var area = $(this).val();
             $.ajax({
-                url: "{% url 'get_types_emfaar_ar' %}",
+                url: "{% url 'get_types_emfaar' %}",
                 data: {area: area},
                 success: function(data){
                     var typeSelect = $('#type-select');
