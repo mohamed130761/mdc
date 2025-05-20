@@ -2,6 +2,27 @@ from django.shortcuts import render
 from .models import Network, Networkmofa, Networkexxon, Networkemfa, Networkhorizon,Networkedsnew
 from django.db.models import Q
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
+
+
+
+
+
+@login_required
+@staff_member_required
+
+def dashboard(request):
+    data = {
+        'EDS': Networkedsnew.objects.count(),
+        'MOFA': Networkmofa.objects.count(),
+        'EXXON': Networkexxon.objects.count(),
+        'EMFA': Networkemfa.objects.count(),
+        'HORIZON': Networkhorizon.objects.count(),
+        'Main Network': Network.objects.count(),
+    }
+    return render(request, 'pages/dashboard.html', {'data': data})
+
 
 # Create your views here.
 

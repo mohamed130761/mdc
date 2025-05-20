@@ -1,7 +1,9 @@
 from django.urls import path
+from django.contrib import admin
 from . import views
 
 urlpatterns=[
+    path('dashboard/', views.dashboard, name='dashboard'),
     path('',views.home,name='home'),
     path('about/',views.about,name='about'),
     path('contact/',views.contact,name='contact'),
@@ -35,5 +37,6 @@ urlpatterns=[
     # AJAX endpoints for EDS
     path('ajax/eds/areas/', views.get_areas_eds, name='get_areas_eds'),
     path('ajax/eds/types/', views.get_types_eds, name='get_types_eds'),
+
 
 ]

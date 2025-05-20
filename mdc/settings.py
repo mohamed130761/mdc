@@ -26,12 +26,13 @@ env = environ.Env(
     DEBUG=(bool, False)  # Default DEBUG to False if not set
 )
 
+
 # Read .env file
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Use environment variables
 SECRET_KEY = env('SECRET_KEY')
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'mdc-eight.vercel.app',
