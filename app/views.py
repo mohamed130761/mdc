@@ -4,6 +4,8 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
+from django.utils.translation import get_language
+
 
 
 
@@ -41,47 +43,52 @@ def contact(request):
 
 
 def network(request):
+    language = get_language()
+
     networks = Network.objects.all()
 
-    # الفلاتر العادية
+    # الفلاتر من الـ GET
     governorate = request.GET.get('governorate')
     area = request.GET.get('area')
     type = request.GET.get('type')
     speciality = request.GET.get('speciality')
-    query = request.GET.get('query')  # البحث العام
+    query = request.GET.get('query')
+
+    # اختيار الأعمدة المناسبة حسب اللغة
+    governorate_field = 'governorate_ar' if language == 'ar' else 'governorate'
+    area_field = 'area_ar' if language == 'ar' else 'area'
+    type_field = 'type_ar' if language == 'ar' else 'type'
+    speciality_field = 'speciality_ar' if language == 'ar' else 'speciality'
 
     # تطبيق الفلاتر
     if governorate:
-        networks = networks.filter(governorate=governorate)
+        networks = networks.filter(**{governorate_field: governorate})
     if area:
-        networks = networks.filter(area=area)
+        networks = networks.filter(**{area_field: area})
     if type:
-        networks = networks.filter(type=type)
+        networks = networks.filter(**{type_field: type})
     if speciality:
-        networks = networks.filter(speciality=speciality)
+        networks = networks.filter(**{speciality_field: speciality})
 
-    # تطبيق البحث العام
     if query:
-        networks = networks.filter(
-            Q(provider__icontains=query) |
-            Q(address__icontains=query) |
-            Q(phone__icontains=query) |
-            Q(email__icontains=query) |
-            Q(notes__icontains=query)
-        )
+        query_filter = Q(provider__icontains=query) | Q(address__icontains=query) | Q(phone__icontains=query) | Q(email__icontains=query) | Q(notes__icontains=query)
+        if language == 'ar':
+            query_filter |= Q(provider_ar__icontains=query) | Q(address_ar__icontains=query)
+        networks = networks.filter(query_filter)
 
-    # البيانات المستخدمة في الفلاتر
-    governorates = Network.objects.values_list('governorate', flat=True).distinct()
-    areas = Network.objects.values_list('area', flat=True).distinct()
-    types = Network.objects.values_list('type', flat=True).distinct()
-    specialities = Network.objects.values_list('speciality', flat=True).distinct()
+    # بيانات الفلاتر حسب اللغة
+    governorates = Network.objects.values_list(governorate_field, flat=True).distinct()
+    areas = Network.objects.values_list(area_field, flat=True).distinct()
+    types = Network.objects.values_list(type_field, flat=True).distinct()
+    specialities = Network.objects.values_list(speciality_field, flat=True).distinct()
 
     return render(request, 'pages/network.html', {
         'networks': networks,
-        'governorates': governorates,
-        'types': types,
-        'specialities': specialities,
-        'areas': areas,
+        'governorates': sorted(filter(None, governorates)),
+        'types': sorted(filter(None, types)),
+        'specialities': sorted(filter(None, specialities)),
+        'areas': sorted(filter(None, areas)),
+        'language': language,  # مهم للتيمبلت
     })
 
 
@@ -94,15 +101,25 @@ def footer(request):
     return render(request,'parts/footer.html')
 
 
-def get_areasen(request):
+def get_areas(request):
+    language = get_language()
     governorate = request.GET.get('governorate')
-    areas = Network.objects.filter(governorate=governorate).values_list('area', flat=True).distinct()
-    return JsonResponse({'areas': list(areas)})
 
-def get_typesen(request):
+    field = 'governorate_ar' if language == 'ar' else 'governorate'
+    area_field = 'area_ar' if language == 'ar' else 'area'
+
+    areas = Network.objects.filter(**{field: governorate}).values_list(area_field, flat=True).distinct()
+    return JsonResponse({'areas': list(filter(None, areas))})
+
+def get_types(request):
+    language = get_language()
     area = request.GET.get('area')
-    types = Network.objects.filter(area=area).values_list('type', flat=True).distinct()
-    return JsonResponse({'types': list(types)})
+
+    area_field = 'area_ar' if language == 'ar' else 'area'
+    type_field = 'type_ar' if language == 'ar' else 'type'
+
+    types = Network.objects.filter(**{area_field: area}).values_list(type_field, flat=True).distinct()
+    return JsonResponse({'types': list(filter(None, types))})
 
 
 
