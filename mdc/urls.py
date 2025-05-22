@@ -25,6 +25,6 @@ urlpatterns = [
 
 urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls),
-    path('stronger_together/',include('app.urls')),
+    path('',include('app.urls')),
 
 )
