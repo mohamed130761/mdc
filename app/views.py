@@ -5,6 +5,8 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.translation import get_language
+from django.core.paginator import Paginator
+
 
 
 
@@ -76,6 +78,19 @@ def network(request):
             query_filter |= Q(provider_ar__icontains=query) | Q(address_ar__icontains=query)
         networks = networks.filter(query_filter)
 
+
+    # Apply pagination
+    paginator = Paginator(networks, 10)  # Show 10 per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # Smart pagination range
+    current_page = page_obj.number
+    total_pages = paginator.num_pages
+    start_page = ((current_page - 1) // 10) * 10 + 1
+    end_page = min(start_page + 9, total_pages)
+    page_range = range(start_page, end_page + 1)
+
     # بيانات الفلاتر حسب اللغة
     governorates = Network.objects.values_list(governorate_field, flat=True).distinct()
     areas = Network.objects.values_list(area_field, flat=True).distinct()
@@ -83,22 +98,15 @@ def network(request):
     specialities = Network.objects.values_list(speciality_field, flat=True).distinct()
 
     return render(request, 'pages/network.html', {
-        'networks': networks,
+        'networks': page_obj,  # Pass paginated object
+        'page_obj': page_obj,  # Also useful for pagination controls
+        'page_range': page_range,  # <- this must be here
         'governorates': sorted(filter(None, governorates)),
         'types': sorted(filter(None, types)),
         'specialities': sorted(filter(None, specialities)),
         'areas': sorted(filter(None, areas)),
         'language': language,  # مهم للتيمبلت
     })
-
-
-
-
-def nav(request):
-    return render(request,'parts/navbar.html')
-
-def footer(request):
-    return render(request,'parts/footer.html')
 
 
 def get_areas(request):
@@ -122,6 +130,16 @@ def get_types(request):
     return JsonResponse({'types': list(filter(None, types))})
 
 
+def nav(request):
+    return render(request,'parts/navbar.html')
+
+def footer(request):
+    return render(request,'parts/footer.html')
+
+
+
+
+
 
 
 
@@ -132,6 +150,8 @@ def get_types(request):
 
 # ========== MOFA ==========
 def mofa(request):
+
+    language = get_language()
     networks = Networkmofa.objects.all()
     governorate = request.GET.get('governorate')
     area = request.GET.get('area')
@@ -139,49 +159,69 @@ def mofa(request):
     speciality = request.GET.get('speciality')
     query = request.GET.get('query')
 
-    if governorate:
-        networks = networks.filter(governorate=governorate)
-    if area:
-        networks = networks.filter(area=area)
-    if type:
-        networks = networks.filter(type=type)
-    if speciality:
-        networks = networks.filter(speciality=speciality)
-    if query:
-        networks = networks.filter(
-            Q(provider__icontains=query) |
-            Q(address__icontains=query) |
-            Q(phone__icontains=query) |
-            Q(email__icontains=query) |
-            Q(notes__icontains=query)
-        )
+    # اختيار الأعمدة المناسبة حسب اللغة
+    governorate_field = 'governorate_ar' if language == 'ar' else 'governorate'
+    area_field = 'area_ar' if language == 'ar' else 'area'
+    type_field = 'type_ar' if language == 'ar' else 'type'
+    speciality_field = 'speciality_ar' if language == 'ar' else 'speciality'
 
-    governorates = Networkmofa.objects.values_list('governorate', flat=True).distinct()
-    areas = Networkmofa.objects.values_list('area', flat=True).distinct()
-    types = Networkmofa.objects.values_list('type', flat=True).distinct()
-    specialities = Networkmofa.objects.values_list('speciality', flat=True).distinct()
+    # تطبيق الفلاتر
+    if governorate:
+        networks = networks.filter(**{governorate_field: governorate})
+    if area:
+        networks = networks.filter(**{area_field: area})
+    if type:
+        networks = networks.filter(**{type_field: type})
+    if speciality:
+        networks = networks.filter(**{speciality_field: speciality})
+
+    if query:
+        query_filter = Q(provider__icontains=query) | Q(address__icontains=query) | Q(phone__icontains=query) | Q(email__icontains=query) | Q(notes__icontains=query)
+        if language == 'ar':
+            query_filter |= Q(provider_ar__icontains=query) | Q(address_ar__icontains=query)
+        networks = networks.filter(query_filter)
+
+    # بيانات الفلاتر حسب اللغة
+    governorates = Networkmofa.objects.values_list(governorate_field, flat=True).distinct()
+    areas = Networkmofa.objects.values_list(area_field, flat=True).distinct()
+    types = Networkmofa.objects.values_list(type_field, flat=True).distinct()
+    specialities = Networkmofa.objects.values_list(speciality_field, flat=True).distinct()
 
     return render(request, 'pages/mofa.html', {
         'networks': networks,
-        'governorates': governorates,
-        'types': types,
-        'specialities': specialities,
-        'areas': areas,
+        'governorates': sorted(filter(None, governorates)),
+        'types': sorted(filter(None, types)),
+        'specialities': sorted(filter(None, specialities)),
+        'areas': sorted(filter(None, areas)),
+        'language': language,  # مهم للتيمبلت
     })
 
+
 def get_areas_mofa(request):
+    language = get_language()
     governorate = request.GET.get('governorate')
-    areas = Networkmofa.objects.filter(governorate=governorate).values_list('area', flat=True).distinct()
-    return JsonResponse({'areas': list(areas)})
+
+    field = 'governorate_ar' if language == 'ar' else 'governorate'
+    area_field = 'area_ar' if language == 'ar' else 'area'
+
+    areas = Networkmofa.objects.filter(**{field: governorate}).values_list(area_field, flat=True).distinct()
+    return JsonResponse({'areas': list(filter(None, areas))})
 
 def get_types_mofa(request):
+    language = get_language()
     area = request.GET.get('area')
-    types = Networkmofa.objects.filter(area=area).values_list('type', flat=True).distinct()
-    return JsonResponse({'types': list(types)})
+
+    area_field = 'area_ar' if language == 'ar' else 'area'
+    type_field = 'type_ar' if language == 'ar' else 'type'
+
+    types = Networkmofa.objects.filter(**{area_field: area}).values_list(type_field, flat=True).distinct()
+    return JsonResponse({'types': list(filter(None, types))})
+
 
 
 # ========== EXXON ==========
 def exxon(request):
+    language=get_language()
     networks = Networkexxon.objects.all()
     governorate = request.GET.get('governorate')
     area = request.GET.get('area')
@@ -189,49 +229,69 @@ def exxon(request):
     speciality = request.GET.get('speciality')
     query = request.GET.get('query')
 
+    # اختيار الأعمدة المناسبة حسب اللغة
+    governorate_field = 'governorate_ar' if language == 'ar' else 'governorate'
+    area_field = 'area_ar' if language == 'ar' else 'area'
+    type_field = 'type_ar' if language == 'ar' else 'type'
+    speciality_field = 'speciality_ar' if language == 'ar' else 'speciality'
+
+    # تطبيق الفلاتر
     if governorate:
-        networks = networks.filter(governorate=governorate)
+        networks = networks.filter(**{governorate_field: governorate})
     if area:
-        networks = networks.filter(area=area)
+        networks = networks.filter(**{area_field: area})
     if type:
-        networks = networks.filter(type=type)
+        networks = networks.filter(**{type_field: type})
     if speciality:
-        networks = networks.filter(speciality=speciality)
+        networks = networks.filter(**{speciality_field: speciality})
+
     if query:
-        networks = networks.filter(
-            Q(provider__icontains=query) |
-            Q(address__icontains=query) |
-            Q(phone__icontains=query) |
-            Q(email__icontains=query) |
-            Q(notes__icontains=query)
-        )
+        query_filter = Q(provider__icontains=query) | Q(address__icontains=query) | Q(phone__icontains=query) | Q(email__icontains=query) | Q(notes__icontains=query)
+        if language == 'ar':
+            query_filter |= Q(provider_ar__icontains=query) | Q(address_ar__icontains=query)
+        networks = networks.filter(query_filter)
 
-    governorates = Networkexxon.objects.values_list('governorate', flat=True).distinct()
-    areas = Networkexxon.objects.values_list('area', flat=True).distinct()
-    types = Networkexxon.objects.values_list('type', flat=True).distinct()
-    specialities = Networkexxon.objects.values_list('speciality', flat=True).distinct()
+    # بيانات الفلاتر حسب اللغة
+    governorates = Networkexxon.objects.values_list(governorate_field, flat=True).distinct()
+    areas = Networkexxon.objects.values_list(area_field, flat=True).distinct()
+    types = Networkexxon.objects.values_list(type_field, flat=True).distinct()
+    specialities = Networkexxon.objects.values_list(speciality_field, flat=True).distinct()
 
-    return render(request, 'pages/exxon.html', {
+    return render(request, 'pages/network.html', {
         'networks': networks,
-        'governorates': governorates,
-        'types': types,
-        'specialities': specialities,
-        'areas': areas,
+        'governorates': sorted(filter(None, governorates)),
+        'types': sorted(filter(None, types)),
+        'specialities': sorted(filter(None, specialities)),
+        'areas': sorted(filter(None, areas)),
+        'language': language,  # مهم للتيمبلت
     })
 
+
 def get_areas_exxon(request):
+    language = get_language()
     governorate = request.GET.get('governorate')
-    areas = Networkexxon.objects.filter(governorate=governorate).values_list('area', flat=True).distinct()
-    return JsonResponse({'areas': list(areas)})
+
+    field = 'governorate_ar' if language == 'ar' else 'governorate'
+    area_field = 'area_ar' if language == 'ar' else 'area'
+
+    areas = Networkexxon.objects.filter(**{field: governorate}).values_list(area_field, flat=True).distinct()
+    return JsonResponse({'areas': list(filter(None, areas))})
 
 def get_types_exxon(request):
+    language = get_language()
     area = request.GET.get('area')
-    types = Networkexxon.objects.filter(area=area).values_list('type', flat=True).distinct()
-    return JsonResponse({'types': list(types)})
+
+    area_field = 'area_ar' if language == 'ar' else 'area'
+    type_field = 'type_ar' if language == 'ar' else 'type'
+
+    types = Networkexxon.objects.filter(**{area_field: area}).values_list(type_field, flat=True).distinct()
+    return JsonResponse({'types': list(filter(None, types))})
+
 
 
 # ========== EMFA ==========
 def emfa(request):
+    language=get_language()
     networks = Networkemfa.objects.all()
     governorate = request.GET.get('governorate')
     area = request.GET.get('area')
@@ -239,142 +299,222 @@ def emfa(request):
     speciality = request.GET.get('speciality')
     query = request.GET.get('query')
 
-    if governorate:
-        networks = networks.filter(governorate=governorate)
-    if area:
-        networks = networks.filter(area=area)
-    if type:
-        networks = networks.filter(type=type)
-    if speciality:
-        networks = networks.filter(speciality=speciality)
-    if query:
-        networks = networks.filter(
-            Q(provider__icontains=query) |
-            Q(address__icontains=query) |
-            Q(phone__icontains=query) |
-            Q(email__icontains=query) |
-            Q(notes__icontains=query)
-        )
+    # اختيار الأعمدة المناسبة حسب اللغة
+    governorate_field = 'governorate_ar' if language == 'ar' else 'governorate'
+    area_field = 'area_ar' if language == 'ar' else 'area'
+    type_field = 'type_ar' if language == 'ar' else 'type'
+    speciality_field = 'speciality_ar' if language == 'ar' else 'speciality'
 
-    governorates = Networkemfa.objects.values_list('governorate', flat=True).distinct()
-    areas = Networkemfa.objects.values_list('area', flat=True).distinct()
-    types = Networkemfa.objects.values_list('type', flat=True).distinct()
-    specialities = Networkemfa.objects.values_list('speciality', flat=True).distinct()
+    # تطبيق الفلاتر
+    if governorate:
+        networks = networks.filter(**{governorate_field: governorate})
+    if area:
+        networks = networks.filter(**{area_field: area})
+    if type:
+        networks = networks.filter(**{type_field: type})
+    if speciality:
+        networks = networks.filter(**{speciality_field: speciality})
+
+    if query:
+        query_filter = Q(provider__icontains=query) | Q(address__icontains=query) | Q(phone__icontains=query) | Q(email__icontains=query) | Q(notes__icontains=query)
+        if language == 'ar':
+            query_filter |= Q(provider_ar__icontains=query) | Q(address_ar__icontains=query)
+        networks = networks.filter(query_filter)
+
+    # بيانات الفلاتر حسب اللغة
+    governorates = Networkemfa.objects.values_list(governorate_field, flat=True).distinct()
+    areas = Networkemfa.objects.values_list(area_field, flat=True).distinct()
+    types = Networkemfa.objects.values_list(type_field, flat=True).distinct()
+    specialities = Networkemfa.objects.values_list(speciality_field, flat=True).distinct()
 
     return render(request, 'pages/emfa.html', {
         'networks': networks,
-        'governorates': governorates,
-        'types': types,
-        'specialities': specialities,
-        'areas': areas,
+        'governorates': sorted(filter(None, governorates)),
+        'types': sorted(filter(None, types)),
+        'specialities': sorted(filter(None, specialities)),
+        'areas': sorted(filter(None, areas)),
+        'language': language,  # مهم للتيمبلت
     })
 
+
+
 def get_areas_emfa(request):
+    language = get_language()
     governorate = request.GET.get('governorate')
-    areas = Networkemfa.objects.filter(governorate=governorate).values_list('area', flat=True).distinct()
-    return JsonResponse({'areas': list(areas)})
+
+    field = 'governorate_ar' if language == 'ar' else 'governorate'
+    area_field = 'area_ar' if language == 'ar' else 'area'
+
+    areas = Networkemfa.objects.filter(**{field: governorate}).values_list(area_field, flat=True).distinct()
+    return JsonResponse({'areas': list(filter(None, areas))})
 
 def get_types_emfa(request):
+    language = get_language()
     area = request.GET.get('area')
-    types = Networkemfa.objects.filter(area=area).values_list('type', flat=True).distinct()
-    return JsonResponse({'types': list(types)})
+
+    area_field = 'area_ar' if language == 'ar' else 'area'
+    type_field = 'type_ar' if language == 'ar' else 'type'
+
+    types = Networkemfa.objects.filter(**{area_field: area}).values_list(type_field, flat=True).distinct()
+    return JsonResponse({'types': list(filter(None, types))})
+
 
 
 # ========== HORIZON ==========
 def horizon(request):
+    language=get_language()
     networks = Networkhorizon.objects.all()
+
     governorate = request.GET.get('governorate')
     area = request.GET.get('area')
     type = request.GET.get('type')
     speciality = request.GET.get('speciality')
     query = request.GET.get('query')
 
-    if governorate:
-        networks = networks.filter(governorate=governorate)
-    if area:
-        networks = networks.filter(area=area)
-    if type:
-        networks = networks.filter(type=type)
-    if speciality:
-        networks = networks.filter(speciality=speciality)
-    if query:
-        networks = networks.filter(
-            Q(provider__icontains=query) |
-            Q(address__icontains=query) |
-            Q(phone__icontains=query) |
-            Q(email__icontains=query) |
-            Q(notes__icontains=query)
-        )
+    # اختيار الأعمدة المناسبة حسب اللغة
+    governorate_field = 'governorate_ar' if language == 'ar' else 'governorate'
+    area_field = 'area_ar' if language == 'ar' else 'area'
+    type_field = 'type_ar' if language == 'ar' else 'type'
+    speciality_field = 'speciality_ar' if language == 'ar' else 'speciality'
 
-    governorates = Networkhorizon.objects.values_list('governorate', flat=True).distinct()
-    areas = Networkhorizon.objects.values_list('area', flat=True).distinct()
-    types = Networkhorizon.objects.values_list('type', flat=True).distinct()
-    specialities = Networkhorizon.objects.values_list('speciality', flat=True).distinct()
+    # تطبيق الفلاتر
+    if governorate:
+        networks = networks.filter(**{governorate_field: governorate})
+    if area:
+        networks = networks.filter(**{area_field: area})
+    if type:
+        networks = networks.filter(**{type_field: type})
+    if speciality:
+        networks = networks.filter(**{speciality_field: speciality})
+
+    if query:
+        query_filter = Q(provider__icontains=query) | Q(address__icontains=query) | Q(phone__icontains=query) | Q(email__icontains=query) | Q(notes__icontains=query)
+        if language == 'ar':
+            query_filter |= Q(provider_ar__icontains=query) | Q(address_ar__icontains=query)
+        networks = networks.filter(query_filter)
+
+    # بيانات الفلاتر حسب اللغة
+    governorates = Networkhorizon.objects.values_list(governorate_field, flat=True).distinct()
+    areas = Networkhorizon.objects.values_list(area_field, flat=True).distinct()
+    types = Networkhorizon.objects.values_list(type_field, flat=True).distinct()
+    specialities = Networkhorizon.objects.values_list(speciality_field, flat=True).distinct()
 
     return render(request, 'pages/horizon.html', {
         'networks': networks,
-        'governorates': governorates,
-        'types': types,
-        'specialities': specialities,
-        'areas': areas,
+        'governorates': sorted(filter(None, governorates)),
+        'types': sorted(filter(None, types)),
+        'specialities': sorted(filter(None, specialities)),
+        'areas': sorted(filter(None, areas)),
+        'language': language,  # مهم للتيمبلت
     })
 
+
+
 def get_areas_horizon(request):
+    language = get_language()
     governorate = request.GET.get('governorate')
-    areas = Networkhorizon.objects.filter(governorate=governorate).values_list('area', flat=True).distinct()
-    return JsonResponse({'areas': list(areas)})
+
+    field = 'governorate_ar' if language == 'ar' else 'governorate'
+    area_field = 'area_ar' if language == 'ar' else 'area'
+
+    areas = Networkhorizon.objects.filter(**{field: governorate}).values_list(area_field, flat=True).distinct()
+    return JsonResponse({'areas': list(filter(None, areas))})
 
 def get_types_horizon(request):
+    language = get_language()
     area = request.GET.get('area')
-    types = Networkhorizon.objects.filter(area=area).values_list('type', flat=True).distinct()
-    return JsonResponse({'types': list(types)})
+
+    area_field = 'area_ar' if language == 'ar' else 'area'
+    type_field = 'type_ar' if language == 'ar' else 'type'
+
+    types = Networkhorizon.objects.filter(**{area_field: area}).values_list(type_field, flat=True).distinct()
+    return JsonResponse({'types': list(filter(None, types))})
+
 
 
 # ========== EDS ==========
 def eds(request):
+    language=get_language()
     networks = Networkedsnew.objects.all()
+
     governorate = request.GET.get('governorate')
     area = request.GET.get('area')
     type = request.GET.get('type')
     speciality = request.GET.get('speciality')
     query = request.GET.get('query')
 
-    if governorate:
-        networks = networks.filter(governorate=governorate)
-    if area:
-        networks = networks.filter(area=area)
-    if type:
-        networks = networks.filter(type=type)
-    if speciality:
-        networks = networks.filter(speciality=speciality)
-    if query:
-        networks = networks.filter(
-            Q(provider__icontains=query) |
-            Q(address__icontains=query) |
-            Q(phone__icontains=query) |
-            Q(email__icontains=query) |
-            Q(notes__icontains=query)
-        )
+    # اختيار الأعمدة المناسبة حسب اللغة
+    governorate_field = 'governorate_ar' if language == 'ar' else 'governorate'
+    area_field = 'area_ar' if language == 'ar' else 'area'
+    type_field = 'type_ar' if language == 'ar' else 'type'
+    speciality_field = 'speciality_ar' if language == 'ar' else 'speciality'
 
-    governorates = Networkedsnew.objects.values_list('governorate', flat=True).distinct()
-    areas = Networkedsnew.objects.values_list('area', flat=True).distinct()
-    types = Networkedsnew.objects.values_list('type', flat=True).distinct()
-    specialities = Networkedsnew.objects.values_list('speciality', flat=True).distinct()
+    # تطبيق الفلاتر
+    if governorate:
+        networks = networks.filter(**{governorate_field: governorate})
+    if area:
+        networks = networks.filter(**{area_field: area})
+    if type:
+        networks = networks.filter(**{type_field: type})
+    if speciality:
+        networks = networks.filter(**{speciality_field: speciality})
+
+    if query:
+        query_filter = Q(provider__icontains=query) | Q(address__icontains=query) | Q(phone__icontains=query) | Q(email__icontains=query) | Q(notes__icontains=query)
+        if language == 'ar':
+            query_filter |= Q(provider_ar__icontains=query) | Q(address_ar__icontains=query)
+        networks = networks.filter(query_filter)
+
+
+
+    # Apply pagination
+    paginator = Paginator(networks, 10)  # Show 10 per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # Smart pagination range
+    current_page = page_obj.number
+    total_pages = paginator.num_pages
+    start_page = ((current_page - 1) // 10) * 10 + 1
+    end_page = min(start_page + 9, total_pages)
+    page_range = range(start_page, end_page + 1)
+
+    # بيانات الفلاتر حسب اللغة
+    governorates = Networkedsnew.objects.values_list(governorate_field, flat=True).distinct()
+    areas = Networkedsnew.objects.values_list(area_field, flat=True).distinct()
+    types = Networkedsnew.objects.values_list(type_field, flat=True).distinct()
+    specialities = Networkedsnew.objects.values_list(speciality_field, flat=True).distinct()
 
     return render(request, 'pages/eds.html', {
-        'networks': networks,
-        'governorates': governorates,
-        'types': types,
-        'specialities': specialities,
-        'areas': areas,
+        'networks': page_obj,  # Pass paginated object
+        'page_obj': page_obj,  # Also useful for pagination controls
+        'page_range': page_range,  # <- this must be here
+        'governorates': sorted(filter(None, governorates)),
+        'types': sorted(filter(None, types)),
+        'specialities': sorted(filter(None, specialities)),
+        'areas': sorted(filter(None, areas)),
+        'language': language,  # مهم للتيمبلت
     })
 
+
+
+
 def get_areas_eds(request):
+    language = get_language()
     governorate = request.GET.get('governorate')
-    areas = Networkedsnew.objects.filter(governorate=governorate).values_list('area', flat=True).distinct()
-    return JsonResponse({'areas': list(areas)})
+
+    field = 'governorate_ar' if language == 'ar' else 'governorate'
+    area_field = 'area_ar' if language == 'ar' else 'area'
+
+    areas = Networkedsnew.objects.filter(**{field: governorate}).values_list(area_field, flat=True).distinct()
+    return JsonResponse({'areas': list(filter(None, areas))})
 
 def get_types_eds(request):
+    language = get_language()
     area = request.GET.get('area')
-    types = Networkedsnew.objects.filter(area=area).values_list('type', flat=True).distinct()
-    return JsonResponse({'types': list(types)})
+
+    area_field = 'area_ar' if language == 'ar' else 'area'
+    type_field = 'type_ar' if language == 'ar' else 'type'
+
+    types = Networkedsnew.objects.filter(**{area_field: area}).values_list(type_field, flat=True).distinct()
+    return JsonResponse({'types': list(filter(None, types))})

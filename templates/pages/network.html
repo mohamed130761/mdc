@@ -114,6 +114,33 @@
         </div>
     </div>
 
+    <!-- Pagination -->
+<nav class="mt-4 d-flex justify-content-center" dir="{% if LANGUAGE_CODE == 'ar' %}rtl{% else %}ltr{% endif %}">
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?{% if request.GET.query %}query={{ request.GET.query }}&{% endif %}page={{ page_obj.previous_page_number }}">
+                    {% if language == 'ar' %}السابق{% else %}Previous{% endif %}
+                </a>
+            </li>
+        {% endif %}
+
+        {% for num in page_range %}
+            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                <a class="page-link" href="?{% if request.GET.query %}query={{ request.GET.query }}&{% endif %}page={{ num }}">{{ num }}</a>
+            </li>
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?{% if request.GET.query %}query={{ request.GET.query }}&{% endif %}page={{ page_obj.next_page_number }}">
+                    {% if language == 'ar' %}التالي{% else %}Next{% endif %}
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
