@@ -97,7 +97,7 @@ class Networkemfa(models.Model):
     speciality_ar = models.CharField(default='N/A',max_length=255, verbose_name='التخصص')
     provider = models.CharField(max_length=255, verbose_name='Provider')
     provider_ar = models.CharField(default='N/A',max_length=255, verbose_name='مقدم الخدمة')
-    address = models.TextField(verbose_name='Address')
+    address = models.TextField(default='N/A',verbose_name='Address')
     address_ar = models.TextField(default='N/A', verbose_name='العنوان')
     phone = models.CharField(max_length=100, verbose_name='Phone')
     website = models.URLField(blank=True, null=True, verbose_name='Website')
