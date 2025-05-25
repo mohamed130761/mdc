@@ -119,7 +119,7 @@
     <ul class="pagination">
         {% if page_obj.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?{% if request.GET.query %}query={{ request.GET.query }}&{% endif %}page={{ page_obj.previous_page_number }}">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query_string %}&{{ query_string }}{% endif %}">
                     {% if language == 'ar' %}السابق{% else %}Previous{% endif %}
                 </a>
             </li>
@@ -127,13 +127,13 @@
 
         {% for num in page_range %}
             <li class="page-item {% if page_obj.number == num %}active{% endif %}">
-                <a class="page-link" href="?{% if request.GET.query %}query={{ request.GET.query }}&{% endif %}page={{ num }}">{{ num }}</a>
+                <a class="page-link" href="?page={{ num }}{% if query_string %}&{{ query_string }}{% endif %}">{{ num }}</a>
             </li>
         {% endfor %}
 
         {% if page_obj.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?{% if request.GET.query %}query={{ request.GET.query }}&{% endif %}page={{ page_obj.next_page_number }}">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query_string %}&{{ query_string }}{% endif %}">
                     {% if language == 'ar' %}التالي{% else %}Next{% endif %}
                 </a>
             </li>

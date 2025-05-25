@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.translation import get_language
 from django.core.paginator import Paginator
+from urllib.parse import urlencode
 
 
 
@@ -97,6 +98,11 @@ def network(request):
     types = Network.objects.values_list(type_field, flat=True).distinct()
     specialities = Network.objects.values_list(speciality_field, flat=True).distinct()
 
+    querydict = request.GET.copy()
+    if 'page' in querydict:
+        del querydict['page']
+    query_string = urlencode(querydict)
+
     return render(request, 'pages/network.html', {
         'networks': page_obj,  # Pass paginated object
         'page_obj': page_obj,  # Also useful for pagination controls
@@ -106,6 +112,8 @@ def network(request):
         'specialities': sorted(filter(None, specialities)),
         'areas': sorted(filter(None, areas)),
         'language': language,  # مهم للتيمبلت
+        'query_string': query_string,
+
     })
 
 
