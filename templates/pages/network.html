@@ -69,49 +69,49 @@
 </form>
 
         <!-- Table -->
-        <div class="table-responsive" dir="{% if LANGUAGE_CODE == 'ar' %}rtl{% else %}ltr{% endif %}">
-            <table class="table table-bordered table-hover table-striped align-middle text-center">
-                <thead class="table-dark">
-                    <tr>
-                        <th>{% if language == 'ar' %}المحافظة{% else %}Governorate{% endif %}</th>
-                        <th>{% if language == 'ar' %}المنطقة{% else %}Area{% endif %}</th>
-                        <th>{% if language == 'ar' %}النوع{% else %}Type{% endif %}</th>
-                        <th>{% if language == 'ar' %}التخصص{% else %}Speciality{% endif %}</th>
-                        <th>{% if language == 'ar' %}المُقدم{% else %}Provider{% endif %}</th>
-                        <th>{% if language == 'ar' %}الخصم{% else %}Discount{% endif %}</th>
-                        <th>{% if language == 'ar' %}العنوان{% else %}Address{% endif %}</th>
-                        <th>{% if language == 'ar' %}الهاتف{% else %}Phone{% endif %}</th>
-                        <th>Website</th>
-                        <th>Email</th>
-                        <th>{% if language == 'ar' %}ملاحظات{% else %}Notes{% endif %}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for network in networks %}
-                    <tr>
-   <td>{% if language == 'en' %}{{ network.governorate }}{% else %}{{ network.governorate_ar }}{% endif %}</td>
-<td>{% if language == 'en' %}{{ network.area }}{% else %}{{ network.area_ar }}{% endif %}</td>
-<td>{% if language == 'en' %}{{ network.type }}{% else %}{{ network.type_ar }}{% endif %}</td>
-<td>{% if language == 'en' %}{{ network.speciality }}{% else %}{{ network.speciality_ar }}{% endif %}</td>
-<td>{% if language == 'en' %}{{ network.provider }}{% else %}{{ network.provider_ar }}{% endif %}</td>
-<td>{{ network.discount }}</td>
-<td>{% if language == 'en' %}{{ network.address }}{% else %}{{ network.address_ar }}{% endif %}</td>
-<td>{{ network.phone }}</td>
-<td>{{ network.website|default:"N/A" }}</td>
-<td>{{ network.email|default:"N/A" }}</td>
-<td>{% if language == 'en' %}{{ network.notes }}{% else %}{{ network.notes_ar|default:"-" }}{% endif %}</td>
+<div class="table-responsive" dir="{% if LANGUAGE_CODE == 'ar' %}rtl{% else %}ltr{% endif %}">
+    <table class="table table-bordered table-hover table-striped align-middle text-center" style="table-layout: fixed; width: 100%;">
+        <thead class="table-dark">
+            <tr>
+                <th style="width: 200px;">{% if language == 'ar' %}المحافظة{% else %}Governorate{% endif %}</th>
+                <th style="width: 200px;">{% if language == 'ar' %}المنطقة{% else %}Area{% endif %}</th>
+                <th style="width: 200px;">{% if language == 'ar' %}النوع{% else %}Type{% endif %}</th>
+                <th style="width: 200px;">{% if language == 'ar' %}التخصص{% else %}Speciality{% endif %}</th>
+                <th style="width: 200px;">{% if language == 'ar' %}المُقدم{% else %}Provider{% endif %}</th>
+                <th style="width: 200px;">{% if language == 'ar' %}الخصم{% else %}Discount{% endif %}</th>
+                <th style="width: 800px;">{% if language == 'ar' %}العنوان{% else %}Address{% endif %}</th>
+                <th style="width: 200px;">{% if language == 'ar' %}الهاتف{% else %}Phone{% endif %}</th>
+                <th style="width: 200px;">Website</th>
+                <th style="width: 200px;">Email</th>
+                <th style="width: 200px;">{% if language == 'ar' %}ملاحظات{% else %}Notes{% endif %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for network in networks %}
+            <tr>
+                <td>{% if language == 'en' %}{{ network.governorate }}{% else %}{{ network.governorate_ar }}{% endif %}</td>
+                <td>{% if language == 'en' %}{{ network.area }}{% else %}{{ network.area_ar }}{% endif %}</td>
+                <td>{% if language == 'en' %}{{ network.type }}{% else %}{{ network.type_ar }}{% endif %}</td>
+                <td>{% if language == 'en' %}{{ network.speciality }}{% else %}{{ network.speciality_ar }}{% endif %}</td>
+                <td>{% if language == 'en' %}{{ network.provider }}{% else %}{{ network.provider_ar }}{% endif %}</td>
+                <td>{{ network.discount }}</td>
+                <td>{% if language == 'en' %}{{ network.address }}{% else %}{{ network.address_ar }}{% endif %}</td>
+                <td>{{ network.phone }}</td>
+                <td>{{ network.website|default:"N/A" }}</td>
+                <td>{{ network.email|default:"N/A" }}</td>
+                <td>{% if language == 'en' %}{{ network.notes }}{% else %}{{ network.notes_ar|default:"-" }}{% endif %}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="11" class="text-muted">
+                    {% if language == 'ar' %}لا يوجد نتائج{% else %}No providers found.{% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="11" class="text-muted">
-                            {% if language == 'ar' %}لا يوجد نتائج{% else %}No providers found.{% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
     </div>
 
     <!-- Pagination -->
