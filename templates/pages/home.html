@@ -1,31 +1,35 @@
 {% extends 'index.html' %}
-{% block content %}
 {% load static %}
+{% load i18n %}
 
-<body class="bg-light">
+{% block content %}
+
+<html lang="{{ language }}" dir="{% if language == 'ar' %}rtl{% else %}ltr{% endif %}">
+
+
+<body class="bg-light" >
 
     <!-- Gradient Heading -->
     <div class="container text-center">
         <h1 class="mb-4" style="background: linear-gradient(to right, #007bff, #00c6ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-            Welcome to the Medical Services Guide
+            {% trans "Welcome to the Medical Services Guide" %}
         </h1>
     </div>
 
-
-
     <!-- Healthcare Providers -->
     <section class="container-fluid py-5 text-center">
-        <h1 class="mb-4">Healthcare Providers</h1>
+        <h1 class="mb-4">{% trans "Healthcare Providers" %}</h1>
         <div class="container">
             <div class="row justify-content-center">
+
                 <!-- Card 1 -->
                 <div class="col-md-4 mb-4">
                     <a href="{% url 'network' %}" class="text-decoration-none text-dark">
                         <div class="card shadow-sm h-100">
-                            <img src="{% static 'logo.jpeg' %}" class="card-img-top" alt="Medmark Discount Card" style="height: 200px; object-fit: cover;">
+                            <img src="{% static 'logo.jpeg' %}" class="card-img-top" alt="{% trans 'Medmark Discount Card' %}" style="height: 200px; object-fit: cover;">
                             <div class="card-body">
-                                <h5 class="card-title">Medmark Discount Card</h5>
-                                <button class="btn btn-primary w-100">View</button>
+                                <h5 class="card-title">{% trans "Medmark Discount Card" %}</h5>
+                                <button class="btn btn-primary w-100">{% trans "View" %}</button>
                             </div>
                         </div>
                     </a>
@@ -35,10 +39,10 @@
                 <div class="col-md-4 mb-4">
                     <a href="{% url 'eds' %}" class="text-decoration-none text-dark">
                         <div class="card shadow-sm h-100">
-                            <img src="{% static 'eds.jpg' %}" class="card-img-top" alt="Egyptian Diplomatic Society" style="height: 200px; object-fit: cover;">
+                            <img src="{% static 'eds.jpg' %}" class="card-img-top" alt="{% trans 'Egyptian Diplomatic Society' %}" style="height: 200px; object-fit: cover;">
                             <div class="card-body">
-                                <h5 class="card-title">Egyptian Diplomatic Society</h5>
-                                <button class="btn btn-primary w-100">View</button>
+                                <h5 class="card-title">{% trans "Egyptian Diplomatic Society" %}</h5>
+                                <button class="btn btn-primary w-100">{% trans "View" %}</button>
                             </div>
                         </div>
                     </a>
@@ -48,10 +52,10 @@
                 <div class="col-md-4 mb-4">
                     <a href="{% url 'mofa' %}" class="text-decoration-none text-dark">
                         <div class="card shadow-sm h-100">
-                            <img src="{% static 'log.png' %}" class="card-img-top" alt="Ministry of Foreign Affairs - Horizon" style="height: 200px; object-fit: cover;">
+                            <img src="{% static 'log.png' %}" class="card-img-top" alt="{% trans 'Ministry of Foreign Affairs - Horizon' %}" style="height: 200px; object-fit: cover;">
                             <div class="card-body">
-                                <h5 class="card-title">MOFA - Horizon</h5>
-                                <button class="btn btn-primary w-100">View</button>
+                                <h5 class="card-title">{% trans "MOFA - Horizon" %}</h5>
+                                <button class="btn btn-primary w-100">{% trans "View" %}</button>
                             </div>
                         </div>
                     </a>
@@ -61,10 +65,10 @@
                 <div class="col-md-4 mb-4">
                     <a href="{% url 'exxon' %}" class="text-decoration-none text-dark">
                         <div class="card shadow-sm h-100">
-                            <img src="{% static 'exxon2.png' %}" class="card-img-top" alt="EXXON MOBIL Co" style="height: 200px; object-fit: cover;">
+                            <img src="{% static 'exxon2.png' %}" class="card-img-top" alt="{% trans 'EXXON MOBIL Co' %}" style="height: 200px; object-fit: cover;">
                             <div class="card-body">
-                                <h5 class="card-title">Exxon Mobil Egypt</h5>
-                                <button class="btn btn-primary w-100">View</button>
+                                <h5 class="card-title">{% trans "Exxon Mobil Egypt" %}</h5>
+                                <button class="btn btn-primary w-100">{% trans "View" %}</button>
                             </div>
                         </div>
                     </a>
@@ -74,10 +78,10 @@
                 <div class="col-md-4 mb-4">
                     <a href="{% url 'emfa' %}" class="text-decoration-none text-dark">
                         <div class="card shadow-sm h-100">
-                            <img src="{% static 'log.png' %}" class="card-img-top" alt="Ministry of Foreign Affairs - Allianz" style="height: 200px; object-fit: cover;">
+                            <img src="{% static 'log.png' %}" class="card-img-top" alt="{% trans 'Ministry of Foreign Affairs - Allianz' %}" style="height: 200px; object-fit: cover;">
                             <div class="card-body">
-                                <h5 class="card-title">MOFA - Allianz</h5>
-                                <button class="btn btn-primary w-100">View</button>
+                                <h5 class="card-title">{% trans "MOFA - Allianz" %}</h5>
+                                <button class="btn btn-primary w-100">{% trans "View" %}</button>
                             </div>
                         </div>
                     </a>
@@ -87,14 +91,15 @@
                 <div class="col-md-4 mb-4">
                     <a href="{% url 'horizon' %}" class="text-decoration-none text-dark">
                         <div class="card shadow-sm h-100">
-                            <img src="{% static 'logo.jpeg' %}" class="card-img-top" alt="Horizon Groups" style="height: 200px; object-fit: cover;">
+                            <img src="{% static 'logo.jpeg' %}" class="card-img-top" alt="{% trans 'Horizon Groups' %}" style="height: 200px; object-fit: cover;">
                             <div class="card-body">
-                                <h5 class="card-title">medmark Horizon Groups</h5>
-                                <button class="btn btn-primary w-100">View</button>
+                                <h5 class="card-title">{% trans "medmark Horizon Groups" %}</h5>
+                                <button class="btn btn-primary w-100">{% trans "View" %}</button>
                             </div>
                         </div>
                     </a>
                 </div>
+
             </div>
         </div>
     </section>
