@@ -23,7 +23,7 @@ msgstr "مرحباً بكم فى دليل الرعاية الطبية "
 
 #: .\templates\pages\home.html:21
 msgid "Healthcare Providers"
-msgstr "مقدمو الرعاية الطبية"
+msgstr "الشبكة الطبية"
 
 #: .\templates\pages\home.html:29 .\templates\pages\home.html:31
 msgid "Medmark Discount Card"
