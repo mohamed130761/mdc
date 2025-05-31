@@ -7,6 +7,9 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.translation import get_language
 from django.core.paginator import Paginator
 from urllib.parse import urlencode
+import uuid
+from django.core.mail import EmailMessage
+from .forms import PreAuthForm
 
 
 @login_required
@@ -37,7 +40,8 @@ def about(request):
     return render(request,'pages/about.html')
 
 def contact(request):
-    return render(request,'pages/contact.html')
+    language=get_language()
+    return render(request,'pages/contact.html',{'language':language})
 
 
 def network(request):
@@ -134,7 +138,8 @@ def get_types(request):
 
 
 def nav(request):
-    return render(request,'parts/navbar.html')
+    language=get_language()
+    return render(request,'parts/navbar.html',{'language':language})
 
 def footer(request):
     return render(request,'parts/footer.html')
@@ -560,3 +565,44 @@ def get_types_eds(request):
     types = Networkedsnew.objects.filter(**{area_field: area}).values_list(type_field, flat=True).distinct()
     return JsonResponse({'types': list(filter(None, types))})
 
+#--------------------pre-auth ----------------------------
+
+def preauth_view(request):
+    reference_number = None
+
+    if request.method == 'POST':
+        form = PreAuthForm(request.POST, request.FILES)
+        if form.is_valid():
+            cd = form.cleaned_data
+            reference_number = str(uuid.uuid4()).split('-')[0]  # توليد رقم مرجعي مختصر
+
+            subject = f"طلب موافقة جديد - رقم مرجعي: {reference_number}"
+            body = f"""
+            الاسم: {cd['name']}
+            التواصل: {cd['contact']}
+            نوع الخدمة: {cd['service_type']}
+            وصف: {cd['description']}
+            الرقم المرجعي: {reference_number}
+            """
+
+            email = EmailMessage(
+                subject,
+                body,
+                to=['mohamed130761@gmail.com'],  # عدل البريد هنا
+            )
+
+            if request.FILES.get('file'):
+                email.attach(request.FILES['file'].name, request.FILES['file'].read(), request.FILES['file'].content_type)
+
+            email.send()
+
+            return render(request, 'pages/preauth.html', {
+                'form': PreAuthForm(),
+                'reference': reference_number,
+                'success': True
+            })
+
+    else:
+        form = PreAuthForm()
+
+    return render(request, 'pages/preauth.html', {'form': form})

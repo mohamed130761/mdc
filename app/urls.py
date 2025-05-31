@@ -15,6 +15,7 @@ urlpatterns=[
     path('exxon/', views.exxon, name='exxon'),
     path('emfa/', views.emfa, name='emfa'),
     path('horizon/', views.horizon, name='horizon'),
+    path('preauth/',views.preauth_view,name='preauth'),
 
 
 
