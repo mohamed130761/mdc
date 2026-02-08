@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Network,Networkedsnew,Networkemfa,Networkmofa,Networkexxon,Networkhorizon
+from .models import Network,Networkedsnew,Networkemfa,Networkmofa,Networkexxon,Networkhorizon,NetworkHorizonGlobal
 from import_export.admin import ImportExportModelAdmin
 from django.db import models
 
@@ -49,4 +49,9 @@ class NetworkAdmin(ImportExportModelAdmin):
     list_filter = ['provider','governorate','area']
 
 
-
+@admin.register(NetworkHorizonGlobal)
+class NetworkAdmin(ImportExportModelAdmin):
+    list_display = ['governorate','area','type','speciality','provider','address','phone']
+    list_display_links = ['provider', 'phone']
+    search_fields = ['governorate','area','type','speciality','provider','address','phone']
+    list_filter = ['provider','governorate','area']

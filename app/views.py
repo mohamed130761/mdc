@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Network, Networkmofa, Networkexxon, Networkemfa, Networkhorizon,Networkedsnew
+from .models import Network, Networkmofa, Networkexxon, Networkemfa, Networkhorizon,Networkedsnew,NetworkHorizonGlobal
 from django.db.models import Q
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -18,6 +18,7 @@ from .forms import PreAuthForm
 def dashboard(request):
     data = {
         'EDS': Networkedsnew.objects.count(),
+        'HORIZONGLOBAL': NetworkHorizonGlobal.objects.count(),
         'MOFA': Networkmofa.objects.count(),
         'EXXON': Networkexxon.objects.count(),
         'EMFA': Networkemfa.objects.count(),
@@ -565,6 +566,100 @@ def get_types_eds(request):
     types = Networkedsnew.objects.filter(**{area_field: area}).values_list(type_field, flat=True).distinct()
     return JsonResponse({'types': list(filter(None, types))})
 
+
+def horizon_global_network(request):
+    language = get_language()
+
+    networks = NetworkHorizonGlobal.objects.all()
+
+    governorate = request.GET.get('governorate')
+    area = request.GET.get('area')
+    type = request.GET.get('type')
+    speciality = request.GET.get('speciality')
+    query = request.GET.get('query')
+
+    governorate_field = 'governorate_ar' if language == 'ar' else 'governorate'
+    area_field = 'area_ar' if language == 'ar' else 'area'
+    type_field = 'type_ar' if language == 'ar' else 'type'
+    speciality_field = 'speciality_ar' if language == 'ar' else 'speciality'
+
+    if governorate:
+        networks = networks.filter(**{governorate_field: governorate})
+    if area:
+        networks = networks.filter(**{area_field: area})
+    if type:
+        networks = networks.filter(**{type_field: type})
+    if speciality:
+        networks = networks.filter(**{speciality_field: speciality})
+
+    if query:
+        q = Q(provider__icontains=query) | Q(address__icontains=query) | Q(phone__icontains=query) | Q(email__icontains=query) | Q(notes__icontains=query)
+        if language == 'ar':
+            q |= Q(provider_ar__icontains=query) | Q(address_ar__icontains=query)
+        networks = networks.filter(q)
+
+    paginator = Paginator(networks, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    current_page = page_obj.number
+    total_pages = paginator.num_pages
+    start_page = ((current_page - 1) // 10) * 10 + 1
+    end_page = min(start_page + 9, total_pages)
+    page_range = range(start_page, end_page + 1)
+
+    governorates = NetworkHorizonGlobal.objects.values_list(governorate_field, flat=True).distinct()
+    areas = NetworkHorizonGlobal.objects.values_list(area_field, flat=True).distinct()
+    types = NetworkHorizonGlobal.objects.values_list(type_field, flat=True).distinct()
+    specialities = NetworkHorizonGlobal.objects.values_list(speciality_field, flat=True).distinct()
+
+    querydict = request.GET.copy()
+    if 'page' in querydict:
+        del querydict['page']
+    query_string = urlencode(querydict)
+
+    return render(request, 'pages/horizon_global_network.html', {
+        'networks': page_obj,
+        'page_obj': page_obj,
+        'page_range': page_range,
+        'governorates': sorted(filter(None, governorates)),
+        'areas': sorted(filter(None, areas)),
+        'types': sorted(filter(None, types)),
+        'specialities': sorted(filter(None, specialities)),
+        'language': language,
+        'query_string': query_string,
+    })
+
+
+
+def get_areas_horizon_global(request):
+    language = get_language()
+    governorate = request.GET.get('governorate')
+
+    field = 'governorate_ar' if language == 'ar' else 'governorate'
+    area_field = 'area_ar' if language == 'ar' else 'area'
+
+    areas = NetworkHorizonGlobal.objects.filter(**{field: governorate}).values_list(area_field, flat=True).distinct()
+    return JsonResponse({'areas': list(filter(None, areas))})
+
+
+
+def get_types_horizon_global(request):
+    language = get_language()
+    area = request.GET.get('area')
+
+    area_field = 'area_ar' if language == 'ar' else 'area'
+    type_field = 'type_ar' if language == 'ar' else 'type'
+
+    types = NetworkHorizonGlobal.objects.filter(**{area_field: area}).values_list(type_field, flat=True).distinct()
+    return JsonResponse({'types': list(filter(None, types))})
+
+
+
+
+
+
+
 #--------------------pre-auth ----------------------------
 
 def preauth_view(request):
@@ -606,3 +701,8 @@ def preauth_view(request):
         form = PreAuthForm()
 
     return render(request, 'pages/preauth.html', {'form': form})
+
+
+
+
+
