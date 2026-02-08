@@ -56,7 +56,7 @@
             <button type="submit" class="btn btn-primary">
                 {% if LANGUAGE_CODE == 'ar' %}تصفية{% else %}Filter{% endif %}
             </button>
-            <a href="{% url 'horizon' %}" class="btn btn-secondary">
+            <a href="{% url 'horizon_global_network' %}" class="btn btn-secondary">
                 {% if LANGUAGE_CODE == 'ar' %}إعادة تعيين{% else %}Reset{% endif %}
             </a>
         </div>
@@ -179,7 +179,7 @@
         $('select[name="governorate"]').change(function () {
             let selectedGovernorate = $(this).val();
             $.ajax({
-                url: "{% url 'get_areas_horizon' %}",
+                url: "{% url 'get_areas_horizon_global_network' %}",
                 data: { 'governorate': selectedGovernorate },
                 success: function (data) {
                     let areaSelect = $('select[name="area"]');
@@ -193,7 +193,7 @@
         $('select[name="area"]').change(function () {
             let selectedArea = $(this).val();
             $.ajax({
-                url: "{% url 'get_types_horizon' %}",
+                url: "{% url 'get_types_horizon_global_network' %}",
                 data: { 'area': selectedArea },
                 success: function (data) {
                     let typeSelect = $('select[name="type"]');
