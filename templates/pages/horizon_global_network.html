@@ -179,7 +179,7 @@
         $('select[name="governorate"]').change(function () {
             let selectedGovernorate = $(this).val();
             $.ajax({
-                url: "{% url 'get_areas_horizon_global_network' %}",
+                url: "{% url 'get_areas_horizon_global' %}",
                 data: { 'governorate': selectedGovernorate },
                 success: function (data) {
                     let areaSelect = $('select[name="area"]');
@@ -193,7 +193,7 @@
         $('select[name="area"]').change(function () {
             let selectedArea = $(this).val();
             $.ajax({
-                url: "{% url 'get_types_horizon_global_network' %}",
+                url: "{% url 'get_types_horizon_global' %}",
                 data: { 'area': selectedArea },
                 success: function (data) {
                     let typeSelect = $('select[name="type"]');
